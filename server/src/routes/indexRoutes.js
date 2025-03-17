@@ -7,6 +7,4 @@ const categoryRoutes = require('./categoryRoutes');
 router.use('/product', productRoutes);
 router.use('/category', categoryRoutes);
 
-
-
-module.exports = router
+module.exports = router;

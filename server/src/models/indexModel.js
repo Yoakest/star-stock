@@ -1,18 +1,13 @@
-const { Sequelize, DataTypes } = require('sequelize');
-require('dotenv').config();
+const sequelize = require('./db');
 
-const sequelize = new Sequelize({
-    dialect: process.env.DB_DIALECT,
-    host: process.env.DB_HOST,
-    port: 3306,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE_NAME
-});
+// Modelleri içe aktar ve oluştur
+const Product = require('./productModel');
+const Category = require('./categoryModel');
+const ProductCategory = require('./productCategory');
 
-// Modeli içe aktar ve oluştur
-const Product = require('./productModel')(sequelize);
-const Category = require('./categoryModel')(sequelize);
+// Many-to-Many İlişkiler
+Product.belongsToMany(Category, { through: ProductCategory });
+Category.belongsToMany(Product, { through: ProductCategory });
 
 sequelize.sync({ alter: true })
     .then(() => {
@@ -22,4 +17,4 @@ sequelize.sync({ alter: true })
         console.error('Veritabanı senkronizasyon hatası:', err);
     });
 
-module.exports = { sequelize, Product, Category };
+module.exports =  {sequelize, Product, Category, ProductCategory};
