@@ -16,7 +16,7 @@ export default {
       }
     };
   },
-  
+
   methods: {
     async createProduct() {
       try {
@@ -37,6 +37,7 @@ export default {
               total_pallets: null,
               hide: null,
             }
+            this.$router.push('/product/list'); // Ürün listesine yönlendirme
           }
           else {
             alert("Ürün oluşturlurken hata oluştu");

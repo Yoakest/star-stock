@@ -14,11 +14,20 @@ router.get('/get-products', async (req, res) => {
 
 router.get('/get-product/:id', async (req, res) => {
     const productId = req.params.id;
-    const product = await findByPkProduct(productId);
-    res.json({
-        status: "success", data: product
+    console.log(productId);
+    const product = await findByPkProduct(productId).then((data) => {
+        console.log(data);
+        if (data == null) {
+            res.status(404).json({
+                status: "error", data: productId + " Product not found"
+            });
+        }
+        res.status(200).json({
+            status: "success", data: data
+        });
     });
-})
+    console.log(product);
+});
 
 router.post('/create-product', async (req, res) => {
     const product = req.body;

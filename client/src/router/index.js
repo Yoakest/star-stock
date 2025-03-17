@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ProductCreate from '@/views/ProductCreate.vue'
 import ProductList from '@/views/ProductList.vue'
+import ProductEdit from '@/views/ProductEdit.vue'
 
 const routes = [
   {
@@ -25,6 +26,11 @@ const routes = [
     path: '/product/list',
     name: 'product-list',
     component: ProductList
+  }
+  ,{
+    path: '/product/edit/:id',
+    name: 'product-edit',
+    component: ProductEdit
   }
 ]
 
