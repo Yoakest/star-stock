@@ -39,13 +39,13 @@
             <div>
                 <label for="total_stock" class="block text-sm font-medium text-gray-700">Toplam Stok</label>
                 <input v-model="product.total_stock" type="number" id="total_stock"
-                    class="w-full mt-1 p-2 border rounded" required />
+                    class="w-full mt-1 p-2 border rounded" />
             </div>
 
             <div>
                 <label for="total_pallets" class="block text-sm font-medium text-gray-700">Toplam Palet</label>
                 <input v-model="product.total_pallets" type="number" id="total_pallets"
-                    class="w-full mt-1 p-2 border rounded" required />
+                    class="w-full mt-1 p-2 border rounded" />
             </div>
 
             <div>
