@@ -1,30 +1,43 @@
 <template>
-  <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6">Ürünler Listesi</h1>
-    <div v-if="loading" class="text-center text-xl">Yükleniyor...</div>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Ürünler Listesi</h1>
+
+    <div v-if="loading" class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Yükleniyor...</span>
+      </div>
+    </div>
+
     <div v-else>
-      <table class="min-w-full table-auto border-collapse">
-        <thead>
+      <table class="table table-hover table-bordered">
+        <thead class="table-dark">
           <tr>
-            <th class="py-2 px-4 border-b">Ürün Adı</th>
-            <th class="py-2 px-4 border-b">Ürün Kodu</th>
-            <th class="py-2 px-4 border-b">Marka</th>
-            <th class="py-2 px-4 border-b">Toplam Stok</th>
-            <th class="py-2 px-4 border-b">İşlemler</th>
+            <th>Ürün Adı</th>
+            <th>Ürün Kodu</th>
+            <th>Marka</th>
+            <th>Palet içi adet</th>
+            <th>Paket içi adet</th>
+            <th>Ağırlık</th>
+            <th>Toplam Stok</th>
+            <th>Toplam Palet</th>
+            <th>İşlemler</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="product in products" :key="product.id">
-            <td class="py-2 px-4 border-b">{{ product.product_name }}</td>
-            <td class="py-2 px-4 border-b">{{ product.product_code }}</td>
-            <td class="py-2 px-4 border-b">{{ product.brand }}</td>
-            <td class="py-2 px-4 border-b">{{ product.total_stock }}</td>
-            <td class="py-2 px-4 border-b">
-              <router-link :to="`/product/edit/${product.id}`" class="text-blue-500">
-                <button class="text-blue-500">Düzenle</button>
+            <td>{{ product.product_name }}</td>
+            <td>{{ product.product_code }}</td>
+            <td>{{ product.brand }}</td>
+            <td>{{ product.pallet_quantity }}</td>
+            <td>{{ product.package_quantity }}</td>
+            <td>{{ product.weight }}</td>
+            <td>{{ product.total_stock }}</td>
+            <td>{{ product.total_pallets }}</td>
+            <td>
+              <router-link :to="`/product/edit/${product.id}`">
+                <button class="btn btn-sm btn-primary">Düzenle</button>
               </router-link>
-
-              <button @click="deleteProduct(product.id)" class="text-red-500 ml-2">Sil</button>
+              <button @click="deleteProduct(product.id)" class="btn btn-sm btn-danger ms-2">Sil</button>
             </td>
           </tr>
         </tbody>
@@ -34,33 +47,29 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { listProducts } from "../controller/Product/listProduct";
 
 export default {
   data() {
     return {
-      products: [],  // Ürün listesi
-      loading: true, // Yükleniyor durumu
+      products: [],
+      loading: true,
     };
   },
   created() {
-    this.fetchProducts(); // Sayfa yüklendiğinde ürünleri al
+    this.fetchProducts();
   },
   methods: {
-    // Ürünleri API'den çekme fonksiyonu
     async fetchProducts() {
       try {
-        const response = await axios.get('http://192.168.1.110:3001/api/product/get-products');  // API URL'ini burada belirtin
+        const response = await listProducts();
         this.products = response.data;
       } catch (error) {
-        console.error('Ürünler alınırken hata oluştu:', error);
+        console.error("Ürünler alınırken hata oluştu:", error);
       } finally {
         this.loading = false;
       }
     },
-    // Ürünü düzenleme fonksiyonu (henüz işlevsellik eklenmedi)
-
-    // Ürünü silme fonksiyonu
     deleteProduct(productId) {
       console.log(`Ürün silinecek: ${productId}`);
       // API'ye silme isteği gönderilebilir
@@ -68,7 +77,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Stil eklemeleri yapabilirsiniz */
-</style>

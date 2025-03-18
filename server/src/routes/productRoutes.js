@@ -9,7 +9,9 @@ const findByPkProduct = require('../controllers/product/findByPkProduct');
 
 router.get('/get-products', async (req, res) => {
     const products = await getProducts();
-    res.json(products);
+    res.json({
+        status: "success", data: products
+    });
 })
 
 router.get('/get-product/:id', async (req, res) => {
@@ -38,18 +40,31 @@ router.post('/create-product', async (req, res) => {
 });
 
 router.put('/update-product/:id', async (req, res) => {
-    const productId = req.params.id;
-    const product = req.body;
-    console.log(product);
-    const data = await updateProduct(productId, product).then((dataw) => {
-        console.log("test99", dataw);
-    });
-    // console.log(updatedProduct);
-    // const data = await findByPkProduct(updatedProduct);
-    res.json({
-        status: "success", data: data
-    });
+    try {
+        const productId = req.params.id;
+        const productData = req.body;
+
+        console.log("Güncellenecek veri:", productData);
+
+        const updatedProduct = await updateProduct(productId, productData).then(async (data) => {
+            const newData = await findByPkProduct(productId);
+            return newData;
+        })
+
+        if (!updatedProduct) {
+            return res.status(404).json({ status: "error", message: "Ürün bulunamadı veya güncellenemedi" });
+        }
+
+        console.log("Güncellenmiş Ürün:", updatedProduct);
+
+        res.json({ status: "success", data: updatedProduct });
+
+    } catch (error) {
+        console.error("Ürün güncellenirken hata oluştu:", error);
+        res.status(500).json({ status: "error", message: "Sunucu hatası" });
+    }
 });
+
 
 router.delete('/delete-product/:id', async (req, res) => {
     const productId = req.params.id;

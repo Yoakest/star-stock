@@ -14,7 +14,10 @@ export async function getProductById(productId) {
 // Ürünü güncelle
 export async function updateProduct(product) {
   try {
-    await axios.put(`/product/update-product/${product.id}`, product);
+    console.log(product);
+    await axios.put(`/product/update-product/${product.id}`, product).then(data => {
+      console.log(data.data);
+    });
     return true;
   } catch (error) {
     console.error("Ürün güncellenirken hata:", error);
