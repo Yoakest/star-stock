@@ -1,8 +1,12 @@
 async function findByPkProduct(id) {
     try {
-        console.log("product ıd")
-        const { Product } = require('../../models/indexModel');
-        const product = await Product.findByPk(id);
+        const { Product, Category } = require('../../models/indexModel');
+        const product = await Product.findByPk(id, {
+            include: {
+                model: Category,
+                through: { attributes: [] },
+            }
+        });
         return product;
     } catch (error) {
         console.log(error);

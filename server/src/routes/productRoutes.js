@@ -6,13 +6,22 @@ const createProduct = require('../controllers/product/createProduct');
 const updateProduct = require('../controllers/product/updateProduct');
 const deleteProduct = require('../controllers/product/deleteProduct');
 const findByPkProduct = require('../controllers/product/findByPkProduct');
+const addCategoryToProduct = require('../controllers/product/addCategoryToProduct');
+const getProductsWithCategories = require('../controllers/product/getProductsWithCategories');
 
 router.get('/get-products', async (req, res) => {
     const products = await getProducts();
     res.json({
         status: "success", data: products
     });
-})
+});
+
+router.get('/get-product-with-categories', async (req, res) => {
+    const products = await getProductsWithCategories();
+    res.json({
+        status: "success", data: products
+    });
+});
 
 router.get('/get-product/:id', async (req, res) => {
     const productId = req.params.id;
@@ -33,6 +42,8 @@ router.get('/get-product/:id', async (req, res) => {
 
 router.post('/create-product', async (req, res) => {
     const product = req.body;
+    console.log("product");
+    console.log(product);
     const newProduct = await createProduct(product);
     res.json({
         status: "success", data: newProduct
@@ -75,5 +86,16 @@ router.delete('/delete-product/:id', async (req, res) => {
         }
     );
 });
+
+router.post('/add-category/:id', async (req, res) => {
+    const productId = req.params.id;
+    const categoryId = req.body.categoryId;
+    const addedCategory = await addCategoryToProduct(productId, categoryId);
+    res.json(
+        {
+            status: "success", data: addedCategory
+        });
+}
+);
 
 module.exports = router

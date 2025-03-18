@@ -9,7 +9,7 @@ const ProductCategory = require('./productCategory');
 Product.belongsToMany(Category, { through: ProductCategory });
 Category.belongsToMany(Product, { through: ProductCategory });
 
-sequelize.sync({ alter: true }) 
+sequelize.sync({ alter: true })
     .then(() => {
         console.log('Veritabanı senkronize edildi (alter: true)');
     })
@@ -17,4 +17,4 @@ sequelize.sync({ alter: true })
         console.error('Veritabanı senkronizasyon hatası:', err);
     });
 
-module.exports =  {sequelize, Product, Category, ProductCategory};
+module.exports = { sequelize, Product, Category, ProductCategory, ProductCategory };
