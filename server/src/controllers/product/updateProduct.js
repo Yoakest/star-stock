@@ -1,10 +1,21 @@
-async function updateProduct(productId, product) {
+async function updateProduct(productId, productData) {
     try {
-        const { Product } = require('../../models/indexModel');
-        const updatedProduct = await Product.update(product, { where: { id: productId } });
-        return updatedProduct;
+        const { Product, Category } = require('../../models/indexModel');
+
+        // Ürünü güncelle
+        await Product.update(productData, { where: { id: productId } });
+
+        // Eğer `categories` alanı varsa, ilişkileri güncelle
+        if (productData.categories) {
+            const product = await Product.findByPk(productId);
+            if (product) {
+                await product.setCategories(productData.categories);
+            }
+        }
+
+        return { message: "Ürün başarıyla güncellendi" };
     } catch (error) {
-        console.log(error);
+        console.error("Ürün güncellenirken hata oluştu:", error);
         return error;
     }
 }

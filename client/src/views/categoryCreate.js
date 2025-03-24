@@ -7,7 +7,6 @@ function CreateCategory() {
   const navigate = useNavigate();
   const [category, setCategory] = useState({
     name: '',
-    description: '',
   });
 
   const handleChange = (e) => {
@@ -41,16 +40,6 @@ function CreateCategory() {
             value={category.name} 
             onChange={handleChange} 
             required 
-          />
-        </Form.Group>
-
-        <Form.Group controlId="description">
-          <Form.Label>Açıklama</Form.Label>
-          <Form.Control 
-            type="text" 
-            name="description" 
-            value={category.description} 
-            onChange={handleChange} 
           />
         </Form.Group>
 

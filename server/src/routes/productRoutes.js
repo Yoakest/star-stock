@@ -55,7 +55,7 @@ router.put('/update-product/:id', async (req, res) => {
         const productId = req.params.id;
         const productData = req.body;
 
-        console.log("Güncellenecek veri:", productData);
+        console.log("Güncellenecek veri:", productData, productId);
 
         const updatedProduct = await updateProduct(productId, productData).then(async (data) => {
             const newData = await findByPkProduct(productId);

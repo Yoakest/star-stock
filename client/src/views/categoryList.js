@@ -53,7 +53,6 @@ function CategoryList() {
         <thead>
           <tr>
             <th>Kategori Adı</th>
-            <th>Açıklama</th>
             <th>İşlemler</th>
           </tr>
         </thead>
@@ -61,10 +60,9 @@ function CategoryList() {
           {categories.map((category) => (
             <tr key={category.id}>
               <td>{category.name}</td>
-              <td>{category.description}</td>
               <td>
                 <Button variant="primary" onClick={() => handleEdit(category.id)}>Düzenle</Button>
-                <Button variant="danger" onClick={() => handleDelete(category.id)} className="ml-2">Sil</Button>
+                <Button variant="danger" onClick={() => handleDelete(category.id)} className="ms-2">Sil</Button>
               </td>
             </tr>
           ))}
@@ -72,6 +70,6 @@ function CategoryList() {
       </Table>
     </Container>
   );
-};
+}
 
 export default CategoryList;

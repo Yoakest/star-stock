@@ -13,6 +13,15 @@ router.get('/get-categories', async (req, res) => {
     });
 })
 
+router.get('/get-category/:id', async (req, res) => {
+    const categoryId = req.params.id;
+    const findByPkCategory = require('../controllers/category/finfByPkCategory');
+    const category = await findByPkCategory(categoryId);
+    res.json({
+        status: "success", data: category
+    });
+});
+
 router.post('/create-category', async (req, res) => {
     const category = req.body;
     console.log(category);
@@ -31,5 +40,7 @@ router.put('/update-category/:id', async (req, res) => {
         status: "success", data: updatedCategory
     });
 })
+
+
 
 module.exports = router;

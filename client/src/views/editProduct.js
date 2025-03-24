@@ -58,7 +58,9 @@ function EditProduct() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        api.put(`/product/update-product/${id}`, { ...product, categories: selectedCategories })
+        product.categories = selectedCategories;
+        console.log(product);
+        api.put(`/product/update-product/${id}`, product)
             .then(() => {
                 navigate('/'); // Ürün listesine yönlendir
             })
@@ -167,4 +169,3 @@ function EditProduct() {
 }
 
 export default EditProduct;
- 

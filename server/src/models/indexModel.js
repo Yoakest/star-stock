@@ -4,6 +4,8 @@ const sequelize = require('./db');
 const Product = require('./productModel');
 const Category = require('./categoryModel');
 const ProductCategory = require('./productCategory');
+const Pallet = require('./palletModel');
+const Shipment = require('./shipmentModel');
 
 // Many-to-Many İlişkiler
 Product.belongsToMany(Category, { through: ProductCategory });
@@ -17,4 +19,4 @@ sequelize.sync({ alter: true })
         console.error('Veritabanı senkronizasyon hatası:', err);
     });
 
-module.exports = { sequelize, Product, Category, ProductCategory, ProductCategory };
+module.exports = { sequelize, Product, Category, ProductCategory, Pallet, Shipment };
