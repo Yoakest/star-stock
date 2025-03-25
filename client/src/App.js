@@ -7,7 +7,8 @@ import CreateProduct from './views/productCreate';
 import CreateCategory from './views/categoryCreate';
 import CategoryList from './views/categoryList';
 import EditCategory from './views/categoryEdit';
-import CreateShipment from './views/createShipment';
+import CreateShipment from './views/shipmentCreate';
+import ShipmentList from './views/shipmentList';
 
 function App() {
   return (
@@ -20,10 +21,12 @@ function App() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">Ürün Listesi</Nav.Link>
-              <Nav.Link as={Link} to="/category-list">Kategori Listesi</Nav.Link> 
+              <Nav.Link as={Link} to="/category-list">Kategori Listesi</Nav.Link>
+              <Nav.Link as={Link} to="/shipment-list">Sevkiyat Listesi</Nav.Link>
               <Nav.Link as={Link} to="/create-product">Ürün Oluştur</Nav.Link>
               <Nav.Link as={Link} to="/create-category">Kategori Oluştur</Nav.Link>
               <Nav.Link as={Link} to="/create-shipment">Sipariş Olustur</Nav.Link>
+
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -40,6 +43,8 @@ function App() {
           <Route path="/category-list" element={<CategoryList />} />
           <Route path="/edit-category/:id" element={<EditCategory />} />
           <Route path="/create-shipment" element={<CreateShipment />} />
+          <Route path="/shipment-list" element={<ShipmentList />} />
+          <Route path="*" element={<div>404 Sayfa Bulunamadı</div>} />
         </Routes>
       </Container>
     </Router>

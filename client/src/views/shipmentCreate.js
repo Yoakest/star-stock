@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Table } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import api from '../axios';
 
 function CreateShipment() {
-  const navigate = useNavigate();
   const [shipment, setShipment] = useState({
     shipment_date: new Date().toISOString().split('T')[0],
     shipment_type: 'Giriş', // Varsayılan 'gelen' olarak ayarlandı
@@ -51,13 +49,14 @@ function CreateShipment() {
       alert('Lütfen bir ürün ve miktar girin.');
       return;
     }
+    console.log("selectedItem", selectedItem);
 
     const newItem = {
       id: selectedItem.id,
       quantity: parseInt(quantity, 10),
+      product_code: selectedItem.product_code
     };
 
-    console.log(selectedItem);
 
     setShipment((prev) => ({
       ...prev,
@@ -71,6 +70,7 @@ function CreateShipment() {
   // API'ye veri gönderme
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("shipment");
     console.log(shipment);
     api.post('/shipment/create-shipment', shipment)
       .catch((err) => console.error('Sevkiyat oluşturulurken hata oluştu:', err));
@@ -198,7 +198,7 @@ function CreateShipment() {
         <h4>Palet Listesi</h4>
         <ul>
           {shipment.pallet_list.map((item, index) => (
-            <li key={index}>{item.name} - {item.quantity} adet</li>
+            <li key={index}>{item.product_code} - {item.quantity} adet</li>
           ))}
         </ul>
 

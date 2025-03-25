@@ -25,7 +25,6 @@ const Pallet = sequelize.define('Pallet', {
     },
     onDelete: 'CASCADE', // Ürün silinirse bağlı paletler de silinsin
   },
-
 });
 
 Pallet.associate = (models) => {

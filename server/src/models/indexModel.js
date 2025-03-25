@@ -11,6 +11,12 @@ const Shipment = require('./shipmentModel');
 Product.belongsToMany(Category, { through: ProductCategory });
 Category.belongsToMany(Product, { through: ProductCategory });
 
+Shipment.hasMany(Pallet, { foreignKey: 'shipmentId' });
+Pallet.belongsTo(Shipment, { foreignKey: 'shipmentId' });
+
+Pallet.belongsTo(Product, { foreignKey: 'productId' });
+Product.hasMany(Pallet, { foreignKey: 'productId' });
+
 sequelize.sync({ alter: true })
     .then(() => {
         console.log('Veritabanı senkronize edildi (alter: true)');
