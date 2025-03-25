@@ -1,9 +1,10 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
+const Product = require('./productModel');
 
 const Pallet = sequelize.define('Pallet', {
   pallet_no: {
-    type: DataTypes.STRING(10),
+    type: DataTypes.INTEGER,
     allowNull: false,
     unique: true,
   },
@@ -15,6 +16,16 @@ const Pallet = sequelize.define('Pallet', {
     type: DataTypes.ENUM('Pharmastar', 'Logismart'),
     allowNull: false,
   },
+  productId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Product,
+      key: 'id',
+    },
+    onDelete: 'CASCADE', // Ürün silinirse bağlı paletler de silinsin
+  },
+
 });
 
 Pallet.associate = (models) => {

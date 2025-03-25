@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
-  
+
 const Shipment = sequelize.define('Shipment', {
   shipment_date: {
     type: DataTypes.DATE,
@@ -11,7 +11,7 @@ const Shipment = sequelize.define('Shipment', {
     allowNull: false,
   },
   shipment_no: {
-    type: DataTypes.STRING(10),
+    type: DataTypes.INTEGER,
     allowNull: false,
     unique: true,
   },

@@ -1,18 +1,37 @@
-import React, { useState } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Form, Button, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import api from '../axios'; // Axios instance
+import api from '../axios';
 
 function CreateShipment() {
   const navigate = useNavigate();
   const [shipment, setShipment] = useState({
-    shipment_date: '',
-    shipment_type: 'entry', // Varsayılan olarak 'entry'
+    shipment_date: new Date().toISOString().split('T')[0],
+    shipment_type: 'Giriş', // Varsayılan 'gelen' olarak ayarlandı
     shipment_no: '',
     recipient: '',
-    palletList: '',
+    pallet_list: [],
   });
 
+  const [products, setProducts] = useState([]); // Ürün listesi (entry için)
+  const [pallets, setPallets] = useState([]); // Palet listesi (exit için)
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [quantity, setQuantity] = useState('');
+
+  // Ürün ve paletleri API'den çek
+  useEffect(() => {
+    if (shipment.shipment_type === 'Giriş') {
+      api.get('/product/get-products')
+        .then((res) => setProducts(res.data.data))
+        .catch((err) => console.error('Ürünler alınırken hata oluştu', err));
+    } else {
+      api.get('/pallet/get-pallets')
+        .then((res) => setPallets(res.data.data))
+        .catch((err) => console.error('Paletler alınırken hata oluştu', err));
+    }
+  }, [shipment.shipment_type]);
+
+  // Form inputlarını güncelle
   const handleChange = (e) => {
     const { name, value } = e.target;
     setShipment((prev) => ({
@@ -21,20 +40,40 @@ function CreateShipment() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const shipmentData = {
-      ...shipment,
-      palletList: JSON.parse(shipment.palletList), // JSON string'den obje'ye dönüştürme
+  // Ürün veya palet seçildiğinde state'i güncelle
+  const handleSelect = (item) => {
+    setSelectedItem(item);
+  };
+
+  // Palet listesine ekleme işlemi
+  const handleAddToPalletList = () => {
+    if (!selectedItem || !quantity) {
+      alert('Lütfen bir ürün ve miktar girin.');
+      return;
+    }
+
+    const newItem = {
+      id: selectedItem.id,
+      quantity: parseInt(quantity, 10),
     };
 
-    api.post('/shipment/create-shipment', shipmentData)
-      .then(() => {
-        navigate('/shipments'); // Sevkiyatlar listesine yönlendir
-      })
-      .catch((err) => {
-        console.error('Sevkiyat oluşturulurken hata oluştu:', err);
-      });
+    console.log(selectedItem);
+
+    setShipment((prev) => ({
+      ...prev,
+      pallet_list: [...prev.pallet_list, newItem],
+    }));
+
+    setSelectedItem(null);
+    setQuantity('');
+  };
+
+  // API'ye veri gönderme
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(shipment);
+    api.post('/shipment/create-shipment', shipment)
+      .catch((err) => console.error('Sevkiyat oluşturulurken hata oluştu:', err));
   };
 
   return (
@@ -61,8 +100,8 @@ function CreateShipment() {
             onChange={handleChange}
             required
           >
-            <option value="entry">Giriş</option>
-            <option value="exit">Çıkış</option>
+            <option value="Giriş">Giriş</option>
+            <option value="Çıkış">Çıkış</option>
           </Form.Control>
         </Form.Group>
 
@@ -88,21 +127,82 @@ function CreateShipment() {
           />
         </Form.Group>
 
-        <Form.Group controlId="palletList">
-          <Form.Label>Palet Listesi (JSON Formatında)</Form.Label>
-          <Form.Control
-            as="textarea"
-            name="palletList"
-            value={shipment.palletList}
-            onChange={handleChange}
-            placeholder='Örneğin: [{"pallet_no": "123", "product_id": 1, "quantity": 10}]'
-            required
-          />
-        </Form.Group>
+        {/* Sevkiyat türüne göre Ürün veya Palet Listesi */}
+        {shipment.shipment_type === 'Giriş' ? (
+          <>
+            <h4>Ürün Listesi</h4>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Ürün Adı</th>
+                  <th>Ürün Kodu</th>
+                  <th>Seç</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product.id}>
+                    <td>{product.product_name}</td>
+                    <td>{product.product_code}</td>
+                    <td>
+                      <Button variant="success" onClick={() => handleSelect(product)}>Seç</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </>
+        ) : (
+          <>
+            <h4>Palet Listesi</h4>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Palet No</th>
+                  <th>Ürün Adı</th>
+                  <th>Miktar</th>
+                  <th>Seç</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pallets.map((pallet) => (
+                  <tr key={pallet.id}>
+                    <td>{pallet.pallet_no}</td>
+                    <td>{pallet.product_name}</td>
+                    <td>{pallet.quantity}</td>
+                    <td>
+                      <Button variant="warning" onClick={() => handleSelect(pallet)}>Seç</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </>
+        )}
 
-        <Button variant="primary" type="submit" className="mt-3">
-          Oluştur
-        </Button>
+        {/* Miktar Ekleme Alanı */}
+        {selectedItem && (
+          <Form.Group controlId="quantity">
+            <Form.Label>{shipment.shipment_type === 'Giriş' ? 'Ürün Miktarı' : 'Gönderilecek Miktar'}</Form.Label>
+            <Form.Control
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              required
+            />
+            <Button variant="primary" className="mt-2" onClick={handleAddToPalletList}>Ekle</Button>
+          </Form.Group>
+        )}
+
+        {/* Seçilen Palet Listesi */}
+        <h4>Palet Listesi</h4>
+        <ul>
+          {shipment.pallet_list.map((item, index) => (
+            <li key={index}>{item.name} - {item.quantity} adet</li>
+          ))}
+        </ul>
+
+        <Button variant="primary" type="submit" className="mt-3">Sevkiyatı Kaydet</Button>
       </Form>
     </Container>
   );
