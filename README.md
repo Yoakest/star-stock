@@ -1,19 +1,22 @@
 # star-stock
 
-3. ip Modülü Kullanarak Basitçe IP Almak
-Alternatif olarak, ip adlı npm paketini kullanabilirsin.
+Bu uygulama bir depo stok takip sistem uygulaması olacak.
 
-📌 Öncelikle paketi yükle:
+Backend (nodejs, expressjs, sequelize, dotenv, cors, mysql2)
+Frontend (reactjs, bootstrap, axios)
+Database (MySQL)
 
-sh
-npm install ip
-Sonra şu kodu kullan:
+Backend tarafında
+-Modeller;
+--Ürünler
+--Kategoriler
+--Paletler
+--Sevkiyatlar
 
-js
-const ip = require('ip');
-console.log('Bilgisayarın IP adresi:', ip.address());
-✅ Örnek Çıktı:
+-Model işlemleri;
+--Ürün listele (id ile listele, kategoriye göre listele), oluştur, düzenle, sil
+--Kategori listele, oluştur, düzenle, sil
+--Palletleri listele
+--Sevkiyat oluştur, düzenle, sil
 
-yaml
-Bilgisayarın IP adresi: 192.168.1.10
-Bu yöntemlerden biri ihtiyacını karşılayacaktır. Eğer dış IP adresini (internet üzerindeki IP) öğrenmek istersen, bana söyle, onu da anlatabilirim! 🚀
+
